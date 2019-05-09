@@ -59,7 +59,7 @@ resource "azurerm_public_ip" "pubip-cishardentest-main" {
     name                         = "pubip-cishardentest-main"
     location                     = "${var.g-location}"
     resource_group_name          = "${azurerm_resource_group.rg-main.name}"
-    allocation_method            = "Dynamic"
+    allocation_method            = "Static"
 
     tags {
         environment = "cishardentest"
@@ -98,7 +98,6 @@ resource "azurerm_network_interface" "nic-cishardentest-main-server2016" {
         name                          = "myNicConfiguration"
         subnet_id                     = "${azurerm_subnet.snet-cishardentest-main.id}"
         private_ip_address_allocation = "Dynamic"
-        public_ip_address_id          = "${azurerm_public_ip.pubip-cishardentest-main.id}"
     }
 
     tags {
