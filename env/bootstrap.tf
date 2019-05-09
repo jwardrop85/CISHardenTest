@@ -160,6 +160,8 @@ resource "azurerm_virtual_machine" "vm-cishardentest-server2016-prd" {
     tags {
         environment = "cishardentest"
     }
+
+    depends_on = ["azurerm_storage_account.stor-cishardentest-main"]
 }
 
 resource "azurerm_storage_account" "stor-cishardentest-main" {
