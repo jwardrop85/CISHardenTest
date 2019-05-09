@@ -1,0 +1,5 @@
+g-location = "uksouth"
+g-core-kv  = "kv-dev-core"
+g-core-rg  = "rg-dev-core-mgmt"
+g-vmsize = "Standard_B2s"
+g-sshkeydata = "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAjkIz7Te/gSdEF3k1oXer85aXREdbMXZvfsaDfsIMMvD8iucgNqGYkCG2hbNyCgvchgtWVorUS+BF8tv2vzQMzMk99/Epq9C8V2dgbRRJESKsQ0SPXndDv/vrgvi3EdzO0kQAW9PVwSKgh9mBpuffrPgqrTgh7FOANO5ksnd7uU/9A8DuHYvVKoGIM+cjinzvDxzwcfPKz6LEZCvqfhynj+L5STjx9YI3f7MOb1y9W8hzwPonrOjbExGCckqfalIvmUDgPrr6cQoe86csZ1Gtf77LaFd+J5XIlr1+K1dY7hGb4JDLCLoxXIkxNeXDAuXRJJdFlwaCwZ+Y49BJViTdlQ=="
