@@ -20,6 +20,6 @@ resource "azurerm_lb" "lb-cishardentest-main" {
 
   frontend_ip_configuration {
     name                 = "lb-cishardentest-main-fendip"
-    public_ip_address_id = "${azurerm_public_ip.pubip-cishardentest-main-lb}"
+    public_ip_address_id = "${azurerm_public_ip.pubip-cishardentest-main-lb.public_ip_address_id}"
   }
 }
