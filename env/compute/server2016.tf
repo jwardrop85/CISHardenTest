@@ -1,4 +1,6 @@
-
+variable g-location {}
+variable g-vmsize {}
+variable g-sshkeydata {}
 resource "azurerm_virtual_machine" "myterraformvm" {
     name                  = "myVM"
     location              = "${var.locale}"

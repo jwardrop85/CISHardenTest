@@ -1,3 +1,7 @@
+variable g-location {}
+variable g-vmsize {}
+variable g-sshkeydata {}
+
 resource "azurerm_virtual_network" "net-cishardentest-main" {
     name                = "net-cishardentest-main"
     address_space       = ["10.0.0.0/16"]
