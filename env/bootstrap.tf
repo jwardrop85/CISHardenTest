@@ -14,7 +14,7 @@ output "vault_uri" {
 }
 data "azurerm_key_vault_secret" "adm-usr-server2016-prd" {
   name      = "adm-usr-server2016-prd"
-  key_vault_id = "${data.azurerm_key_vault.kv-dev-core.adm-usr-server2016-prd}"
+  key_vault_id = "${data.azurerm_key_vault.kv-dev-core.id}"
 }
 
 provider "azurerm" {
