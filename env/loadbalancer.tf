@@ -1,6 +1,6 @@
-variable g-location {}
-variable g-core-kv {}
-variable g-core-rg {}
+#variable g-location {}
+#variable g-core-kv {}
+#variable g-core-rg {}
 
 
 resource "azurerm_public_ip" "pubip-cishardentest-main-lb" {
