@@ -154,7 +154,7 @@ resource "azurerm_virtual_machine" "vm-cishardentest-server2016-prd" {
 
     boot_diagnostics {
         enabled     = "true"
-        storage_uri = "${azurerm_storage_account.stor-cishardentest-main}"
+        storage_uri = "${azurerm_storage_account.stor-cishardentest-main.primary_blob_endpoint}"
     }
 
     tags {
