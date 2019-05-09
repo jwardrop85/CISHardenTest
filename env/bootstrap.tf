@@ -66,28 +66,8 @@ resource "azurerm_public_ip" "pubip-cishardentest-main" {
     }
 }
 
-resource "azurerm_network_interface" "nic-cishardentest-main-server2016" {
-    name                = "nic-cishardentest-main-server2016"
-    location            = "${var.g-location}"
-    resource_group_name = "${azurerm_resource_group.rg-main.name}"
-    network_security_group_id = "${azurerm_network_security_group.myterraformnsg.id}"
-
-    ip_configuration {
-        name                          = "myNicConfiguration"
-        subnet_id                     = "${azurerm_subnet.snet-cishardentest-main.id}"
-        private_ip_address_allocation = "Dynamic"
-        public_ip_address_id          = "${azurerm_public_ip.pubip-cishardentest-main.id}"
-    }
-
-    tags {
-        environment = "cishardentest"
-    }
-
-    depends_on = ["azurerm_subnet.snet-cishardentest-main"]
-}
-
 resource "azurerm_network_security_group" "nsg-cishardentest-main" {
-    name                = "myNetworkSecurityGroup"
+    name                = "nsg-cishardentest-main"
     location            = "${var.g-location}"
     resource_group_name = "${azurerm_resource_group.rg-main.name}"
     
@@ -107,6 +87,28 @@ resource "azurerm_network_security_group" "nsg-cishardentest-main" {
         environment = "cishardentest"
     }
 }
+
+resource "azurerm_network_interface" "nic-cishardentest-main-server2016" {
+    name                = "nic-cishardentest-main-server2016"
+    location            = "${var.g-location}"
+    resource_group_name = "${azurerm_resource_group.rg-main.name}"
+    network_security_group_id = "${azurerm_network_security_group.nsg-cishardentest-main.id}"
+
+    ip_configuration {
+        name                          = "myNicConfiguration"
+        subnet_id                     = "${azurerm_subnet.snet-cishardentest-main.id}"
+        private_ip_address_allocation = "Dynamic"
+        public_ip_address_id          = "${azurerm_public_ip.pubip-cishardentest-main.id}"
+    }
+
+    tags {
+        environment = "cishardentest"
+    }
+
+    depends_on = ["azurerm_network_security_group.nsg-cishardentest-main"]
+}
+
+
 
 resource "random_id" "randomId" {
     keepers = {
