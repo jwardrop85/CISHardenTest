@@ -1,6 +1,21 @@
 variable g-location {}
 variable g-vmsize {}
 variable g-sshkeydata {}
+variable g-core-kv {}
+variable g-core-rg {}
+
+data "azurerm_key_vault" "kv-dev-core" {
+  name                = "${var.g-core-kv}"
+  resource_group_name = "${var.g-core-rg}"
+}
+
+output "vault_uri" {
+  value = "${data.azurerm_key_vault.kv-dev-core.vault_uri}"
+}
+data "azurerm_key_vault_secret" "adm-usr-server2016-prd" {
+  name      = "adm-usr-server2016-prd"
+  key_vault_id = "${data.azurerm_key_vault.kv-dev-core.adm-usr-server2016-prd}"
+}
 
 provider "azurerm" {
 }
@@ -51,38 +66,67 @@ resource "azurerm_public_ip" "pubip-cishardentest-main" {
     }
 }
 
-resource "azurerm_virtual_machine" "myterraformvm" {
-    name                  = "myVM"
-    location              = "${var.locale}"
+resource "azurerm_network_interface" "nic-cishardentest-main-server2016" {
+    name                = "nic-cishardentest-main-server2016"
+    location            = "${var.g-location}"
+    resource_group_name = "${azurerm_resource_group.rg-main.name}"
+    network_security_group_id = "${azurerm_network_security_group.myterraformnsg.id}"
+
+    ip_configuration {
+        name                          = "myNicConfiguration"
+        subnet_id                     = "${azurerm_subnet.snet-cishardentest-main.id}"
+        private_ip_address_allocation = "Dynamic"
+        public_ip_address_id          = "${azurerm_public_ip.pubip-cishardentest-main.id}"
+    }
+
+    tags {
+        environment = "cishardentest"
+    }
+
+    depends_on = ["azurerm_subnet.snet-cishardentest-main"]
+}
+
+resource "random_id" "randomId" {
+    keepers = {
+        # Generate a new ID only when a new resource group is defined
+        resource_group = "${azurerm_resource_group.rg-main.name}"
+    }
+    
+    byte_length = 8
+
+}
+
+
+resource "azurerm_virtual_machine" "vm-cishardentest-server2016-prd" {
+    name                  = "server2016-prd"
+    location              = "${var.g-location}"
     resource_group_name   = "${azurerm_resource_group.rg-main.name}"
-    network_interface_ids = ["${azurerm_network_interface.myterraformnic.id}"]
-    vm_size               = "${var.vmsize}"
+    network_interface_ids = ["${azurerm_network_interface.nic-cishardentest-main-server2016.id}"]
+    vm_size               = "${var.g-vmsize}"
 
     storage_os_disk {
-        name              = "myOsDisk"
+        name              = "disk-cishardentest-server2016-prd"
         caching           = "ReadWrite"
         create_option     = "FromImage"
         managed_disk_type = "Premium_LRS"
     }
 
-    storage_image_reference {
-        publisher = "Canonical"
-        offer     = "UbuntuServer"
-        sku       = "16.04.0-LTS"
-        version   = "latest"
+    storage_image_reference  {
+        publisher="MicrosoftWindowsServer"
+        offer="WindowsServer"
+        sku="2016-Datacenter"
+        version="latest"
     }
 
     os_profile {
-        computer_name  = "myvm"
-        admin_username = "azureuser"
+        computer_name  = "server2016-prd"
+        admin_username = "azureadmin"
+        admin_password = "${data.azurerm_key_vault_secret.adm-usr-server2016-prd.value}"
     }
 
-    os_profile_linux_config {
-        disable_password_authentication = true
-        ssh_keys {
-            path     = "/home/azureuser/.ssh/authorized_keys"
-            key_data = "${var.sshkeydata}"
-        }
+    os_profile_windows_config {
+        timezone = "GMT Standard Time"
+        provision_vm_agent = "true"
     }
 
     boot_diagnostics {
@@ -91,7 +135,7 @@ resource "azurerm_virtual_machine" "myterraformvm" {
     }
 
     tags {
-        environment = "TerraformTest"
+        environment = "cishardentest"
     }
 }
 
@@ -103,7 +147,7 @@ resource "azurerm_storage_account" "mystorageaccount" {
     account_tier = "Standard"
 
     tags {
-        environment = "TerraformTest"
+        environment = "cishardentest"
     }
 
     depends_on = ["azurerm_resource_group.rg-main"]
