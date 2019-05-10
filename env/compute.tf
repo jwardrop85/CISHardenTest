@@ -17,6 +17,12 @@ resource "azurerm_network_interface" "nic-cishardentest-main-server2016" {
     depends_on = ["azurerm_network_security_group.nsg-cishardentest-main"]
 }
 
+resource "azurerm_network_interface_backend_address_pool_association" "bend-link-cishardentest-main-servernic-lb" {
+  network_interface_id    = "${azurerm_network_interface.nic-cishardentest-main-server2016.id}"
+  ip_configuration_name   = "Server2016Bend"
+  backend_address_pool_id = "${azurerm_lb_backend_address_pool.lbbend-cishardentest-main-server.id}"
+}
+
 resource "azurerm_virtual_machine" "vm-cishardentest-server2016-prd" {
     name                  = "server2016-prd"
     location              = "${var.g-location}"
