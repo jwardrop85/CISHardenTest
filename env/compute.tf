@@ -5,6 +5,7 @@ resource "azurerm_network_interface" "nic-cishardentest-main-server2016" {
     network_security_group_id = "${azurerm_network_security_group.nsg-cishardentest-main.id}"
 
     ip_configuration {
+        id = 0
         name                          = "ipcfg-cishardentest-main"
         subnet_id                     = "${azurerm_subnet.snet-cishardentest-main.id}"
         private_ip_address_allocation = "Dynamic"
@@ -19,7 +20,7 @@ resource "azurerm_network_interface" "nic-cishardentest-main-server2016" {
 
 resource "azurerm_network_interface_backend_address_pool_association" "bend-link-cishardentest-main-servernic-lb" {
   network_interface_id    = "${azurerm_network_interface.nic-cishardentest-main-server2016.id}"
-  ip_configuration_name   = "ipcfg-cishardentest-main"
+  ip_configuration_name   = "${azurerm_network_interface.ip_configuration.0.name"
   backend_address_pool_id = "${azurerm_lb_backend_address_pool.lbbend-cishardentest-main-server.id}"
 }
 
