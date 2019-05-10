@@ -5,7 +5,7 @@ resource "azurerm_network_interface" "nic-cishardentest-main-server2016" {
     network_security_group_id = "${azurerm_network_security_group.nsg-cishardentest-main.id}"
 
     ip_configuration {
-        id = 0
+        id                            = "0"
         name                          = "ipcfg-cishardentest-main"
         subnet_id                     = "${azurerm_subnet.snet-cishardentest-main.id}"
         private_ip_address_allocation = "Dynamic"
