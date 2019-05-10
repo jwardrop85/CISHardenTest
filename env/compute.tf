@@ -19,7 +19,7 @@ resource "azurerm_network_interface" "nic-cishardentest-main-server2016" {
 
 resource "azurerm_network_interface_backend_address_pool_association" "bend-link-cishardentest-main-servernic-lb" {
   network_interface_id    = "${azurerm_network_interface.nic-cishardentest-main-server2016.id}"
-  ip_configuration_name   = "Server2016Bend"
+  ip_configuration_name   = "${azurerm_network_interface.nic-cishardentest-main-server2016.ip_configuration.name}"
   backend_address_pool_id = "${azurerm_lb_backend_address_pool.lbbend-cishardentest-main-server.id}"
 }
 

@@ -4,7 +4,7 @@
 
 
 resource "azurerm_public_ip" "pubip-cishardentest-main-lb" {
-    name                         = "pubip-cishardentest-main"
+    name                         = "pubip-cishardentest-main-lb"
     location                     = "${var.g-location}"
     resource_group_name          = "${azurerm_resource_group.rg-main.name}"
     allocation_method            = "Static"
@@ -37,5 +37,6 @@ resource "azurerm_lb_nat_rule" "nat-RDPAccess" {
   protocol                       = "Tcp"
   frontend_port                  = 54523
   backend_port                   = 3389
-  frontend_ip_configuration_name = "${azurerm_public_ip.pubip-cishardentest-main-lb.name}"
+  frontend_ip_configuration_name = "${azurerm_lb.lb-cishardentest-main.frontend_ip_configuration.name}"
+  depends_on = ["azurerm_lb.lb-cishardentest-main"]
 }
