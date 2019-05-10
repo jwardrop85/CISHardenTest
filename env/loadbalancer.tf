@@ -37,6 +37,6 @@ resource "azurerm_lb_nat_rule" "nat-RDPAccess" {
   protocol                       = "Tcp"
   frontend_port                  = 54523
   backend_port                   = 3389
-  frontend_ip_configuration_name = "${azurerm_lb.lb-cishardentest-main.frontend_ip_configuration.name}"
+  frontend_ip_configuration_name = "${azurerm_lb.lb-cishardentest-main.frontend_ip_configuration.0.name}"
   depends_on = ["azurerm_lb.lb-cishardentest-main"]
 }
