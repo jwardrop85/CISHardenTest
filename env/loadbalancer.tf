@@ -40,3 +40,15 @@ resource "azurerm_lb_nat_rule" "nat-RDPAccess" {
   frontend_ip_configuration_name = "${azurerm_lb.lb-cishardentest-main.frontend_ip_configuration.0.name}"
   depends_on = ["azurerm_lb.lb-cishardentest-main"]
 }
+
+resource "azurerm_network_interface_backend_address_pool_association" "bend-link-cishardentest-main-servernic-lb" {
+  network_interface_id    = "${azurerm_network_interface.nic-cishardentest-main-server2016.id}"
+  ip_configuration_name   = "${azurerm_network_interface.nic-cishardentest-main-server2016.ip_configuration.0.name}"
+  backend_address_pool_id = "${azurerm_lb_backend_address_pool.lbbend-cishardentest-main-server.id}"
+}
+
+resource "azurerm_network_interface_nat_rule_association" "test" {
+  network_interface_id  = "${azurerm_network_interface.nic-cishardentest-main-server2016.id}"
+  ip_configuration_name = "${azurerm_network_interface.nic-cishardentest-main-server2016.ip_configuration.0.name}"
+  nat_rule_id           = "${azurerm_lb_nat_rule.nat-RDPAccess.id}"
+}
