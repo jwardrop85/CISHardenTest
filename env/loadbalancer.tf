@@ -25,7 +25,7 @@ resource "azurerm_lb" "lb-cishardentest-main" {
 }
 
 resource "azurerm_lb_backend_address_pool" "lbbend-cishardentest-main-server" {
-  resource_group_name = "${azurerm_resource_group.rg-main}"
+  resource_group_name = "${azurerm_resource_group.rg-main.name}"
   loadbalancer_id     = "${azurerm_lb.lb-cishardentest-main.id}"
   name                = "lbbend-cishardentest-main-server"
 }
