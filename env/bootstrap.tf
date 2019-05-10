@@ -12,6 +12,7 @@ data "azurerm_key_vault" "kv-dev-core" {
 output "vault_uri" {
   value = "${data.azurerm_key_vault.kv-dev-core.vault_uri}"
 }
+
 data "azurerm_key_vault_secret" "adm-usr-server2016-prd" {
   name      = "adm-usr-server2016-prd"
   key_vault_id = "${data.azurerm_key_vault.kv-dev-core.id}"
@@ -29,81 +30,6 @@ resource "azurerm_resource_group" "rg-main" {
         }
 }
 
-resource "azurerm_virtual_network" "net-cishardentest-main" {
-    name                = "net-cishardentest-main"
-    address_space       = ["10.0.0.0/16"]
-    location            = "${var.g-location}"
-    resource_group_name = "${azurerm_resource_group.rg-main.name}"
-
-    tags {
-        environment = "cishardentest"
-    }
-
-    depends_on = ["azurerm_resource_group.rg-main"]
-}
-
-resource "azurerm_subnet" "snet-cishardentest-main" {
-    name                 = "snet-cishardentest-main"
-    resource_group_name  = "${azurerm_resource_group.rg-main.name}"
-    virtual_network_name = "${azurerm_virtual_network.net-cishardentest-main.name}"
-    address_prefix       = "10.0.2.0/24"
-    depends_on = ["azurerm_virtual_network.net-cishardentest-main"]
-}
-
-resource "azurerm_public_ip" "pubip-cishardentest-main" {
-    name                         = "pubip-cishardentest-main"
-    location                     = "${var.g-location}"
-    resource_group_name          = "${azurerm_resource_group.rg-main.name}"
-    allocation_method            = "Static"
-
-    tags {
-        environment = "cishardentest"
-    }
-}
-
-resource "azurerm_network_security_group" "nsg-cishardentest-main" {
-    name                = "nsg-cishardentest-main"
-    location            = "${var.g-location}"
-    resource_group_name = "${azurerm_resource_group.rg-main.name}"
-    
-    security_rule {
-        name                       = "SSH"
-        priority                   = 1001
-        direction                  = "Inbound"
-        access                     = "Allow"
-        protocol                   = "Tcp"
-        source_port_range          = "*"
-        destination_port_range     = "22"
-        source_address_prefix      = "*"
-        destination_address_prefix = "*"
-    }
-
-    tags {
-        environment = "cishardentest"
-    }
-}
-
-resource "azurerm_network_interface" "nic-cishardentest-main-server2016" {
-    name                = "nic-cishardentest-main-server2016"
-    location            = "${var.g-location}"
-    resource_group_name = "${azurerm_resource_group.rg-main.name}"
-    network_security_group_id = "${azurerm_network_security_group.nsg-cishardentest-main.id}"
-
-    ip_configuration {
-        name                          = "ipcfg-cishardentest-main"
-        subnet_id                     = "${azurerm_subnet.snet-cishardentest-main.id}"
-        private_ip_address_allocation = "Dynamic"
-    }
-
-    tags {
-        environment = "cishardentest"
-    }
-
-    depends_on = ["azurerm_network_security_group.nsg-cishardentest-main"]
-}
-
-
-
 resource "random_id" "randomId" {
     keepers = {
         # Generate a new ID only when a new resource group is defined
@@ -112,51 +38,6 @@ resource "random_id" "randomId" {
     
     byte_length = 8
 
-}
-
-
-resource "azurerm_virtual_machine" "vm-cishardentest-server2016-prd" {
-    name                  = "server2016-prd"
-    location              = "${var.g-location}"
-    resource_group_name   = "${azurerm_resource_group.rg-main.name}"
-    network_interface_ids = ["${azurerm_network_interface.nic-cishardentest-main-server2016.id}"]
-    vm_size               = "${var.g-vmsize}"
-
-    storage_os_disk {
-        name              = "disk-cishardentest-server2016-prd"
-        caching           = "ReadWrite"
-        create_option     = "FromImage"
-        managed_disk_type = "Premium_LRS"
-    }
-
-    storage_image_reference  {
-        publisher="MicrosoftWindowsServer"
-        offer="WindowsServer"
-        sku="2016-Datacenter"
-        version="latest"
-    }
-
-    os_profile {
-        computer_name  = "server2016-prd"
-        admin_username = "azureadmin"
-        admin_password = "${data.azurerm_key_vault_secret.adm-usr-server2016-prd.value}"
-    }
-
-    os_profile_windows_config {
-        timezone = "GMT Standard Time"
-        provision_vm_agent = "true"
-    }
-
-    boot_diagnostics {
-        enabled     = "true"
-        storage_uri = "${azurerm_storage_account.stor-cishardentest-main.primary_blob_endpoint}"
-    }
-
-    tags {
-        environment = "cishardentest"
-    }
-
-    depends_on = ["azurerm_storage_account.stor-cishardentest-main"]
 }
 
 resource "azurerm_storage_account" "stor-cishardentest-main" {

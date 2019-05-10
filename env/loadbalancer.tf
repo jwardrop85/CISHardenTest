@@ -23,3 +23,19 @@ resource "azurerm_lb" "lb-cishardentest-main" {
     public_ip_address_id = "${azurerm_public_ip.pubip-cishardentest-main-lb.id}"
   }
 }
+
+resource "azurerm_lb_backend_address_pool" "lbbend-cishardentest-main-server" {
+  resource_group_name = "${azurerm_resource_group.rg-main}"
+  loadbalancer_id     = "${azurerm_lb.lb-cishardentest-main.id}"
+  name                = "lbbend-cishardentest-main-server"
+}
+
+resource "azurerm_lb_nat_rule" "nat-RDPAccess" {
+  resource_group_name            = "${azurerm_resource_group.rg-main}"
+  loadbalancer_id                = "${azurerm_lb.lb-cishardentest-main.id}"
+  name                           = "nat-RDPAccess"
+  protocol                       = "Tcp"
+  frontend_port                  = 54523
+  backend_port                   = 3389
+  frontend_ip_configuration_name = "${azurerm_public_ip.pubip-cishardentest-main-lb.name}"
+}
