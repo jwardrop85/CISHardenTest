@@ -81,7 +81,7 @@ resource "azurerm_virtual_machine_extension" "dsc" {
 
   settings = <<SETTINGS
         {
-            "configuration": 
+            "configurationArguments": 
             {
                 "RegistrationUrl" : "${data.azurerm_key_vault_secret.sec-dsc-ep.value}",
                 "NodeConfigurationName" : "${var.dsc_config}"
