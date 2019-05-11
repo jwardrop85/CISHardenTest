@@ -1,3 +1,8 @@
+variable "dsc_config" {
+  default = "CISHardenTest.ProdNode"
+}
+
+
 resource "azurerm_network_interface" "nic-cishardentest-main-server2016" {
     name                = "nic-cishardentest-main-server2016"
     location            = "${var.g-location}"
@@ -62,4 +67,33 @@ resource "azurerm_virtual_machine" "vm-cishardentest-server2016-prd" {
     }
 
     depends_on = ["azurerm_storage_account.stor-cishardentest-main"]
+}
+
+resource "azurerm_virtual_machine_extension" "dsc" {
+  name                 = "Microsoft.Powershell.DSC"
+  location             = "${var.g-location}"
+  resource_group_name  = "${azurerm_resource_group.rg-main.name}"
+  virtual_machine_name = "${azurerm_virtual_machine.vm-cishardentest-server2016-prd.name}"
+  publisher            = "Microsoft.Powershell"
+  type                 = "DSC"
+  type_handler_version = "2.73"
+  depends_on           = ["azurerm_virtual_machine.vm-cishardentest-server2016-prd"]
+
+  settings = <<SETTINGS
+        {
+    "RegistrationUrl" : "${data.azurerm_key_vault_secret.sec-dsc-ep.value}",
+    "NodeConfigurationName" : "${var.dsc_config}"
+}
+    SETTINGS
+
+  protected_settings = <<PROTECTED_SETTINGS
+    {
+    "configurationArguments": {
+        "RegistrationKey": {
+            "userName": "NOT_USED",
+            "Password": "${data.azurerm_key_vault_secret.sec-dsc-pri-ak.value}"
+        }
+    }
+}
+PROTECTED_SETTINGS
 }

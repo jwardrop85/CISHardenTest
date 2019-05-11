@@ -18,6 +18,16 @@ data "azurerm_key_vault_secret" "adm-usr-server2016-prd" {
   key_vault_id = "${data.azurerm_key_vault.kv-dev-core.id}"
 }
 
+data "azurerm_key_vault_secret" "sec-dsc-ep" {
+  name      = "aa-dev-core-dsc-ep"
+  key_vault_id = "${data.azurerm_key_vault.kv-dev-core.id}"
+}
+
+data "azurerm_key_vault_secret" "sec-dsc-pri-ak" {
+  name      = "aa-dev-core-dsc-pri-ak"
+  key_vault_id = "${data.azurerm_key_vault.kv-dev-core.id}"
+}
+
 provider "azurerm" {
 }
 
