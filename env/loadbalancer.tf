@@ -8,7 +8,7 @@ resource "azurerm_public_ip" "pubip-cishardentest-main-lb" {
     location                     = "${var.g-location}"
     resource_group_name          = "${azurerm_resource_group.rg-main.name}"
     allocation_method            = "Static"
-
+    domain_name_label             = "a365-cisharden-2016"
     tags {
         environment = "cishardentest"
     }
