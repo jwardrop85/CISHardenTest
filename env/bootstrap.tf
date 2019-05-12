@@ -17,6 +17,7 @@ output "vault_uri" {
 data "azurerm_key_vault_secret" "adm-usr-server2016-prd" {
   name      = "adm-usr-server2016-prd"
   key_vault_id = "${data.azurerm_key_vault.kv-dev-core.id}"
+  vault_uri = "${var.vault_uri}"
   depends_on = ["data.azurerm_key_vault.kv-dev-core"]
 }
 /*
