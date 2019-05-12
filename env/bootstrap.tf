@@ -11,19 +11,19 @@ data "azurerm_key_vault" "kv-dev-core" {
 
 data "azurerm_key_vault_secret" "adm-usr-server2016-prd" {
   name      = "adm-usr-server2016-prd"
-  vault_uri = "${data.azurerm_key_vault.kv-dev-core.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.kv-dev-core.vault_uri}"
   depends_on = ["data.azurerm_key_vault.kv-dev-core"]
 }
 
 data "azurerm_key_vault_secret" "sec-dsc-ep" {
   name      = "aa-dev-core-dsc-ep"
-  vault_uri = "${data.azurerm_key_vault.kv-dev-core.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.kv-dev-core.vault_uri}"
   depends_on = ["data.azurerm_key_vault.kv-dev-core"]
 }
 
 data "azurerm_key_vault_secret" "sec-dsc-pri-ak" {
   name      = "aa-dev-core-dsc-pri-ak"
-  vault_uri = "${data.azurerm_key_vault.kv-dev-core.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.kv-dev-core.vault_uri}"
   depends_on = ["data.azurerm_key_vault.kv-dev-core"]
 }
 
