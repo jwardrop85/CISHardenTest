@@ -28,9 +28,6 @@ data "azurerm_key_vault_secret" "sec-dsc-pri-ak" {
   key_vault_id = "${data.azurerm_key_vault.kv-dev-core.id}"
 }
 
-provider "azurerm" {
-}
-
 resource "azurerm_resource_group" "rg-main" {
         name = "rg-cishardentest-main"
         location = "${var.g-location}"
