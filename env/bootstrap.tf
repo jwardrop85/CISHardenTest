@@ -29,7 +29,7 @@ data "azurerm_key_vault_secret" "sec-dsc-ep" {
 data "azurerm_key_vault_secret" "sec-dsc-pri-ak" {
   name      = "aa-dev-core-dsc-pri-ak"
   key_vault_id = "${data.azurerm_key_vault.kv-dev-core.id}"
-  depends_on = ["azurerm_key_vault.kv-dev-core"]
+  depends_on = ["data.azurerm_key_vault.kv-dev-core"]
 }
 
 resource "azurerm_resource_group" "rg-main" {
