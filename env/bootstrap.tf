@@ -13,7 +13,7 @@ output "vault_uri" {
   value = "${data.azurerm_key_vault.kv-dev-core.vault_uri}"
   depends_on = ["azurerm_key_vault.kv-dev-core"]
 }
-
+/*
 data "azurerm_key_vault_secret" "adm-usr-server2016-prd" {
   name      = "adm-usr-server2016-prd"
   key_vault_id = "${data.azurerm_key_vault.kv-dev-core.id}"
@@ -31,7 +31,7 @@ data "azurerm_key_vault_secret" "sec-dsc-pri-ak" {
   key_vault_id = "${data.azurerm_key_vault.kv-dev-core.id}"
   depends_on = ["azurerm_key_vault.kv-dev-core"]
 }
-
+*/
 resource "azurerm_resource_group" "rg-main" {
         name = "rg-cishardentest-main"
         location = "${var.g-location}"
