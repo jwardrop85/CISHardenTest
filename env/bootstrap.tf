@@ -9,27 +9,24 @@ data "azurerm_key_vault" "kv-dev-core" {
   resource_group_name = "${var.g-core-rg}"
 }
 
-output "vault_uri" {
-  value = "${data.azurerm_key_vault.kv-dev-core.vault_uri}"
-  depends_on = ["data.azurerm_key_vault.kv-dev-core"]
-}
-
 data "azurerm_key_vault_secret" "adm-usr-server2016-prd" {
   name      = "adm-usr-server2016-prd"
   key_vault_id = "${data.azurerm_key_vault.kv-dev-core.id}"
-  vault_uri = "${var.vault_uri}"
+  vault_uri = "${data.azurerm_key_vault.kv-dev-core.vault_uri}"
   depends_on = ["data.azurerm_key_vault.kv-dev-core"]
 }
 /*
 data "azurerm_key_vault_secret" "sec-dsc-ep" {
   name      = "aa-dev-core-dsc-ep"
   key_vault_id = "${data.azurerm_key_vault.kv-dev-core.id}"
+  vault_uri = "${data.azurerm_key_vault.kv-dev-core.vault_uri}"
   depends_on = ["data.azurerm_key_vault.kv-dev-core"]
 }
 
 data "azurerm_key_vault_secret" "sec-dsc-pri-ak" {
   name      = "aa-dev-core-dsc-pri-ak"
   key_vault_id = "${data.azurerm_key_vault.kv-dev-core.id}"
+  vault_uri = "${data.azurerm_key_vault.kv-dev-core.vault_uri}"
   depends_on = ["data.azurerm_key_vault.kv-dev-core"]
 }
 */
