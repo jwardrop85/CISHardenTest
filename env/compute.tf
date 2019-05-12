@@ -66,7 +66,7 @@ resource "azurerm_virtual_machine" "vm-cishardentest-server2016-prd" {
         environment = "cishardentest"
     }
 
-    depends_on = ["azurerm_storage_account.stor-cishardentest-main"]
+    depends_on = ["azurerm_storage_account.stor-cishardentest-main","data.azurerm_key_vault_secret.adm-usr-server2016-prd"]
 }
 
 resource "azurerm_virtual_machine_extension" "dsc" {
