@@ -76,7 +76,7 @@ resource "azurerm_virtual_machine_extension" "dsc" {
   virtual_machine_name = "${azurerm_virtual_machine.vm-cishardentest-server2016-prd.name}"
   publisher            = "Microsoft.Powershell"
   type                 = "DSC"
-  type_handler_version = "2.76"
+  type_handler_version = "2.77"
   depends_on           = ["azurerm_virtual_machine.vm-cishardentest-server2016-prd"]
 
   settings = <<SETTINGS
